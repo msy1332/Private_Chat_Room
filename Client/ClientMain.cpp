@@ -15,7 +15,30 @@ int main()
 	// 初始化UI
 	Button button;
 	Button button1;
-	button1.SetButtonX(210);
+	vector<UI*> ui = { &button,&button1 };
+
+	ButtonSizeLocation buttonSizeLocation;
+	buttonSizeLocation.x = 778;
+	buttonSizeLocation.y = 2;
+	buttonSizeLocation.width = 20;
+	buttonSizeLocation.height = 20;
+	button1.SetButtonSizeLocation(buttonSizeLocation);
+
+	button1.SetButtonType(ButtonType::Borderless_fill);
+	button1.SetText(L"×");
+
+	ButtonStatusColor Fill;
+	Fill.Ordinary = RGB(240, 240, 240);
+	Fill.Suspended = RGB(232, 17, 35);
+	Fill.Press = RGB(241, 112, 122);
+	button1.SetFillColor(Fill);
+
+	ButtonStatusColor Text;
+	Text.Ordinary = RGB(5, 7, 8);
+	Text.Suspended = RGB(255, 255, 255);
+	Text.Press = RGB(255, 255, 255);
+	button1.SetTextColor(Text);
+
 
 	bool Running = true; // 定义了一个bool变量，用来标记程序的运行状态
 	ExMessage msg; // 定义一个消息结构体，用来存储获取到消息
@@ -26,12 +49,17 @@ int main()
 		while (peekmessage(&msg, EX_MOUSE)) // 获取消息
 		{
 			button.Updata(msg); // 更新按钮的交互状态
-			button1.Updata(msg); // 更新按钮的交互状态
+			if(button1.Updata(msg) == UISignal::Click) // 更新按钮的交互状态
+			{
+				Running = false;
+			}
 		}
 
 		cleardevice(); // 清除绘图窗口，并用背景颜色填充整个窗口
-		button.Draw(); // 绘制按钮
-		button1.Draw(); // 绘制按钮
+		//button.Draw(); // 绘制按钮
+		//button1.Draw(); // 绘制按钮
+		for (auto it : ui)
+			it->Draw();
 		FlushBatchDraw(); // 刷新绘图缓冲区
 	}
 	EndBatchDraw(); // 结束双缓冲绘图

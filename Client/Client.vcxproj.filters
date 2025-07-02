@@ -19,6 +19,9 @@
     <Filter Include="UI\Button">
       <UniqueIdentifier>{acdccbe2-b993-492f-82d4-5dbbabd6a6cc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Tool">
+      <UniqueIdentifier>{a89f3218-5b2f-4a29-86a8-ab605b6766b0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ClientMain.cpp">
@@ -30,6 +33,9 @@
     <ClCompile Include="..\UI\Button\Button.cpp">
       <Filter>UI\Button</Filter>
     </ClCompile>
+    <ClCompile Include="..\Tool\Tool.cpp">
+      <Filter>Tool</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\UI\UI.h">
@@ -37,6 +43,9 @@
     </ClInclude>
     <ClInclude Include="..\UI\Button\Button.h">
       <Filter>UI\Button</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Tool\Tool.h">
+      <Filter>Tool</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

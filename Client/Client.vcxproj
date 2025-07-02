@@ -123,11 +123,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\Tool\Tool.cpp" />
     <ClCompile Include="..\UI\Button\Button.cpp" />
     <ClCompile Include="..\UI\UI.cpp" />
     <ClCompile Include="ClientMain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Tool\Tool.h" />
     <ClInclude Include="..\UI\Button\Button.h" />
     <ClInclude Include="..\UI\UI.h" />
   </ItemGroup>
