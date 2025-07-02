@@ -1,0 +1,58 @@
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Linker files
+*.ilk
+
+# Debugger Files
+*.pdb
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+# debug information files
+*.dwo
+
+# 忽略 Visual Studio 自动生成的文件
+.vs/
+*.ipch
+*.VC.db
+*.obj
+*.pdb
+*.user
+*.log
+*.tlog
+*.sdf
+*.opensdf
+*.cache
+*.ilk
+*.exe
+*.dll
+
