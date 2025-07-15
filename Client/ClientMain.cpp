@@ -3,6 +3,7 @@
 #include <vector> // 包含vector容器的头文件
 #include "../UI/UI.h" // 包含UI接口类的头文件
 #include "../UI/Button/Button.h" // 包含按钮的头文件
+#include "../Tool/Tool.h" // 包含工具头文件
 using namespace std;
 int main()
 {
@@ -39,7 +40,6 @@ int main()
 	Text.Press = RGB(255, 255, 255);
 	button1.SetTextColor(Text);
 
-
 	bool Running = true; // 定义了一个bool变量，用来标记程序的运行状态
 	ExMessage msg; // 定义一个消息结构体，用来存储获取到消息
 
@@ -56,8 +56,8 @@ int main()
 		}
 
 		cleardevice(); // 清除绘图窗口，并用背景颜色填充整个窗口
-		//button.Draw(); // 绘制按钮
-		//button1.Draw(); // 绘制按钮
+		////button.Draw(); // 绘制按钮
+		////button1.Draw(); // 绘制按钮
 		for (auto it : ui)
 			it->Draw();
 		FlushBatchDraw(); // 刷新绘图缓冲区

@@ -244,13 +244,13 @@ void Button::Draw() // 重写了接口类的绘制UI(Draw)的函数，用来绘制按钮
 			switch (buttonStatus)
 			{
 				case ButtonStatus::Ordinary:
-					putimage(buttonSizeLocation.x, buttonSizeLocation.y, &ButtonStatusIMage[0]);
+					tool.Transparent_texture(buttonSizeLocation.x, buttonSizeLocation.y, &ButtonStatusIMage[0]);
 					break;
 				case ButtonStatus::Suspended:
-					putimage(buttonSizeLocation.x, buttonSizeLocation.y, &ButtonStatusIMage[1]);
+					tool.Transparent_texture(buttonSizeLocation.x, buttonSizeLocation.y, &ButtonStatusIMage[1]);
 					break;
 				case ButtonStatus::Press:
-					putimage(buttonSizeLocation.x, buttonSizeLocation.y, &ButtonStatusIMage[2]);
+					tool.Transparent_texture(buttonSizeLocation.x, buttonSizeLocation.y, &ButtonStatusIMage[2]);
 					break;
 			}
 		break;

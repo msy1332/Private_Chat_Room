@@ -1,8 +1,10 @@
-#include <Windows.h>
+#pragma once // 防止头文件重复包含
+#include <Windows.h> // 包含windowsAPI头文件
 #include <iostream> // 包含标准输入输出头文件
 #include <easyx.h> // 包含easyx图形库
 #include <string> // 包含字符串(string)类的头文件
 #include "../UI.h" // 包含UI接口类的头文件
+#include "../../Tool/Tool.h" // 包含工具头文件
 
 enum class ButtonType // 定义了一个强枚举类型，用来表示不同风格的按钮类型
 {
@@ -60,6 +62,8 @@ class Button : public UI // 定义了一个按钮的UI类，并继承这个UI的接口类
 		bool JudgmentMouseInside(int MouseX, int MouseY); // 判断鼠标是否在按钮里面
 		void CalculationTextCenterLocation(); // 计算按钮标签的居中坐标
 	private:
+		Tool tool; // 实例化一个工具对象，并通过这个对象来调用这个透明贴图函数
+
 		int TextCenterX; // 按钮标签居中的x
 		int TextCenterY; // 按钮标签居中的y
 
