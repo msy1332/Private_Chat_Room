@@ -22,6 +22,9 @@
     <Filter Include="Tool">
       <UniqueIdentifier>{a89f3218-5b2f-4a29-86a8-ab605b6766b0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UI\TextBox">
+      <UniqueIdentifier>{5d4d2518-2999-426e-83ce-31e41b2af35c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ClientMain.cpp">
@@ -36,6 +39,9 @@
     <ClCompile Include="..\Tool\Tool.cpp">
       <Filter>Tool</Filter>
     </ClCompile>
+    <ClCompile Include="..\UI\TextBox\TextBox.cpp">
+      <Filter>UI\TextBox</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\UI\UI.h">
@@ -46,6 +52,9 @@
     </ClInclude>
     <ClInclude Include="..\Tool\Tool.h">
       <Filter>Tool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\UI\TextBox\TextBox.h">
+      <Filter>UI\TextBox</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

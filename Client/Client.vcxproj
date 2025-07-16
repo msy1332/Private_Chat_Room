@@ -125,12 +125,14 @@
   <ItemGroup>
     <ClCompile Include="..\Tool\Tool.cpp" />
     <ClCompile Include="..\UI\Button\Button.cpp" />
+    <ClCompile Include="..\UI\TextBox\TextBox.cpp" />
     <ClCompile Include="..\UI\UI.cpp" />
     <ClCompile Include="ClientMain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Tool\Tool.h" />
     <ClInclude Include="..\UI\Button\Button.h" />
+    <ClInclude Include="..\UI\TextBox\TextBox.h" />
     <ClInclude Include="..\UI\UI.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
