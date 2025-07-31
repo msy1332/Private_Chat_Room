@@ -27,7 +27,7 @@ namespace UIControl // 定义了一个UI控件命名空间，为了防止命名冲突
 	{
 		Single_line,	// 单行模式
 		Multiple_lines	// 多行模式
-	}
+	};
 
 	struct TextBoxTexiStyle // 定义了一个结构体，用来存储文本输入框文本的样式
 	{
@@ -35,14 +35,14 @@ namespace UIControl // 定义了一个UI控件命名空间，为了防止命名冲突
 		int height;// 文本的高度
 		std::wstring Font; // 文本的字体的样式
 		bool AlignMode; // 文本的对齐模式
-	}
+	};
 
 	struct TextBoxStatusColor // 定义了一个结构体变量，用来存储文本输入框的三种不同的交互状态下的填充，线条和文本颜色
 	{ 
 		COLORREF Ordinary;	// 普通交互状态下的颜色
 		COLORREF Suspended;	// 悬浮交互状态下的颜色
 		COLORREF Input;		// 输入交互状态下的颜色
-	}
+	};
 
 	struct TextSizeLocation // 定义了一个结构体，用来存储文本输入框大小和位置
 	{
@@ -50,14 +50,14 @@ namespace UIControl // 定义了一个UI控件命名空间，为了防止命名冲突
 		int y;		// 文本输入框的y坐标
 		int width;	// 文本输入框的宽度
 		int line;   // 文本输入框的行
-	}
+	};
 
 	class TextBox : public UI // 定义了一个文本输入框类，并继承UI接口类
 	{
 		public:
-			TextBox()
+			TextBox();
 			TextBox(const TextBox& textBox);
-			~TxetBox();
+			~TextBox();
 
 			int GetID() override; // 重写了接口类中的获取控件ID函数，用来获取文本输入框控件ID
 			void Draw() override; // 重写了接口类的绘制控件函数，用来绘制文本输入框控件函数
@@ -77,5 +77,5 @@ namespace UIControl // 定义了一个UI控件命名空间，为了防止命名冲突
 			TextBoxStatusColor TextColor;
 
 			TextSizeLocation textSizeLocation; //定义了一个结构体变量，用来存储文本输入框大小和位置
-	}
+	};
 }

@@ -283,7 +283,7 @@ void Button::Draw()
 	}
 }
 
-ControlSignal Button::Updata(const ExMessage& msg)
+ControlSignal Button::Update(const ExMessage& msg)
 {
 	if (JudgmentMouseButtonInside(msg.x, msg.y) && msg.message == WM_LBUTTONDOWN)
 	{

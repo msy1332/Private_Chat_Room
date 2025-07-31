@@ -102,7 +102,7 @@ int main()
 			//}
 			for (auto it : ui)
 			{
-				if (it->Updata(msg) == ControlSignal::Click)
+				if (it->Update(msg) == ControlSignal::Click)
 				{
 					switch (it->GetID())
 					{

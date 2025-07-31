@@ -18,6 +18,6 @@ namespace UIControl // 定义了一个UI控件命名空间，为了防止命名冲突
 
 		virtual inline int GetID() = 0;
 		virtual void Draw() = 0;
-		virtual ControlSignal Updata(const ExMessage& msg) = 0;
+		virtual ControlSignal Update(const ExMessage& msg) = 0;
 	};
 }

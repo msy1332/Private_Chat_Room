@@ -68,7 +68,7 @@ namespace UIControl // 定义了一个UI控件命名空间，为了防止命名冲突
 
 			inline int GetID() override; // 重写接口类中的获取控件ID函数，用来获取按钮控件的ID
 			void Draw() override; // 重写接口类中的绘制控件函数，用来绘制按钮控件
-			UIControl::ControlSignal Updata(const ExMessage& msg) override; // 重写接口类中的更新控件函数，用来更新按钮控件的交互状态
+			UIControl::ControlSignal Update(const ExMessage& msg) override; // 重写接口类中的更新控件函数，用来更新按钮控件的交互状态
 			bool JudgmentMouseButtonInside(int MouseX, int MouseY); // 判断鼠标是否在按钮里面
 			void CalculationButtonTagCenterCoordinate(); // 计算按钮标签居中坐标
 		private:
