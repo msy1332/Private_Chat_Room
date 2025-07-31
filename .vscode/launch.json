@@ -1,0 +1,16 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug EXE",          // 📌 显示在调试面板上的名字
+      "type": "cppvsdbg",           // 📌 使用 Windows 下的 Visual Studio 调试器（不是 GDB）
+      "request": "launch",          // 📌 是“启动程序”，而不是“附加到进程”
+      "program": "${workspaceFolder}/x64/Debug/Client.exe", // 📌 你要调试的 EXE 路径
+      "args": [],                   // 📌 传递给 EXE 的参数
+      "stopAtEntry": false,         // 📌 是否在 main 函数处暂停
+      "cwd": "${workspaceFolder}",  // 📌 当前工作目录
+      "environment": [],            // 📌 环境变量（可以为空）
+      "console": "externalTerminal" // 📌 使用外部终端运行（而不是 VSCode 内部）
+    }
+  ]
+}

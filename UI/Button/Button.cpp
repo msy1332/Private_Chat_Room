@@ -1,24 +1,22 @@
-#include "Button.h"
+#include "Button.h" // 包含按钮模块的定义头文件
+using namespace UIControl; // 使用UIControl命名空间
 
-Button::Button() // 默认构造函数，用来初始化按钮
+Button::Button()
 {
-	// 初始化按钮的类型
-	buttonType = ButtonType::Have_border_fill;
+	// 给这个按钮控件分配一个唯一ID
+	if (FlagID == false) // 判断按钮控件是否分配了唯一ID,如果没分配的会，则会分配一个唯一ID,否则不分配
+	{
+		ID = CounterID++;
+		FlagID = true;
+	}
 
-	// 初始化按钮的标签
-	ButtonText = L"button";
-	// std::wcout << "ButtonText: " << ButtonText << std::endl;
+	// 初始化按钮的风格
+	buttonType = ButtonType::With_borders_Fill_Button;
 
-	// 初始化按钮的大小和位置
-	buttonSizeLocation.x = 0;
-	buttonSizeLocation.y = 0;
-	buttonSizeLocation.width = 200;
-	buttonSizeLocation.height = 50;
+	// 初始化按钮交互状态
+	buttonStatus = ButtonStatus::Ordinary;
 
-	// 计算按钮标签文字的居中坐标
-	CalculationTextCenterLocation();
-
-	// 初始化按钮在三种的交互状态下的填充，线条和文字颜色
+	// 初始化按钮在这三种不同的交互状态下的填充，线条和按钮标签的颜色
 	FillColor.Ordinary = RGB(225, 225, 225);
 	FillColor.Suspended = RGB(229, 241, 251);
 	FillColor.Press = RGB(204, 228, 247);
@@ -30,241 +28,269 @@ Button::Button() // 默认构造函数，用来初始化按钮
 	TextColor.Ordinary = RGB(0, 0, 0);
 	TextColor.Suspended = RGB(0, 0, 0);
 	TextColor.Press = RGB(0, 0, 0);
+
+	// 初始化按钮大小和位置
+	buttonSizeLocation.x = 0;
+	buttonSizeLocation.y = 0;
+	buttonSizeLocation.width = 200; 
+	buttonSizeLocation.height = 50;
+
+	// 初始化按钮标签
+	buttonTagStyle.height = 20;
+	buttonTagStyle.width = 0;
+	buttonTagStyle.Font = L"宋体";
+	ButtonTag = L"button" + std::to_wstring(ID);
+	CalculationButtonTagCenterCoordinate(); // 计算按钮标签居中坐标
 }
 
-Button::Button(Button& button) // 默认构造函数，用来初始化按钮
+Button::Button(const Button& button)
 {
-	// 初始化按钮的类型
+	// 给这个按钮控件分配一个唯一ID
+	if (FlagID == false) // 判断按钮控件是否分配了唯一ID,如果没分配的会，则会分配一个唯一ID,否则不分配
+	{
+		ID = CounterID++;
+		FlagID = true;
+	}
+
+	// 拷贝按钮的风格
 	buttonType = button.buttonType;
 
-	// 初始化按钮的标签
-	ButtonText = button.ButtonText;
+	// 初始化按钮交互状态
+	buttonStatus = ButtonStatus::Ordinary;
 
-	// 初始化按钮的大小和位置
-	buttonSizeLocation = button.buttonSizeLocation;
-
-	// 初始化按钮在三种的交互状态下的填充，线条和文字颜色
+	// 拷贝按钮在这三种不同的交互状态下的填充，线条和按钮标签的颜色
 	FillColor = button.FillColor;
 	LineColor = button.LineColor;
 	TextColor = button.TextColor;
+
+	// 拷贝按钮大小和位置
+	buttonSizeLocation = button.buttonSizeLocation;
+
+	// 初始化按钮标签
+	ButtonTag = L"button" + ID;
 }
 
-Button::~Button() // 析构函数，用来释放按钮所用到的资源
+Button::~Button()
 {
-	if (buttonType == ButtonType::Picture)
-	{
-		delete[] ButtonStatusIMagePATH;
-		delete[] ButtonStatusIMage;
-	}
+	delete[] ButtonStatusImage; // 释放按钮所用到的图片资源
 }
 
-void Button::SetButtonX(int x) // 重新设置按钮的x坐标
-{
-	buttonSizeLocation.x = x;
-
-	// 重新计算按钮标签文字的居中坐标
-	CalculationTextCenterLocation();
-}
-
-void Button::SetButtonY(int y) // 重新设置按钮的y坐标
-{
-	buttonSizeLocation.y = y;
-
-	// 重新计算按钮标签文字的居中坐标
-	CalculationTextCenterLocation();
-}
-
-void Button::SetText(std::wstring Text) // 重新设置按钮的标签
-{
-	ButtonText = Text;
-
-	// 重新计算按钮标签文字的居中坐标
-	CalculationTextCenterLocation();
-}
-
-void Button::SetButtonType(ButtonType buttonType) // 重新设置按钮的风格，也就是按钮的类型
+void Button::SetButtonType(ButtonType buttonType) // 重新设置按钮的风格
 {
 	this->buttonType = buttonType;
 }
 
-void Button::SetFillColor(ButtonStatusColor FillColor) // 重新按钮在三种的交互状态下的填充颜色
+void Button::SetButtonTag(std::wstring ButtonTag) // 重新设置按钮的标签
+{
+	this->ButtonTag = ButtonTag;
+}
+
+void Button::SetButtonTagStyle(ButtonTagStyle buttonTagStyle) // 重新设置按钮标签样式，也就是这个按钮标签文本大小和字体
+{
+	this->buttonTagStyle = buttonTagStyle;
+	CalculationButtonTagCenterCoordinate(); // 重新计算按钮标签居中坐标
+}
+
+void Button::SetButtonStatusFill(ButtonStatusColor FillColor) // 重新设置按钮的三种的交互状态下的不同填充颜色
 {
 	this->FillColor = FillColor;
 }
 
-void Button::SetLineColor(ButtonStatusColor LineColor) // 重新按钮在三种的交互状态下的线条颜色
+void Button::SetButtonStatusLine(ButtonStatusColor LineColor) // 重新设置按钮的三种的交互状态下的不同线条颜色
 {
 	this->LineColor = LineColor;
 }
 
-void Button::SetTextColor(ButtonStatusColor TextColor) // 重新按钮在三种的交互状态下的文字颜色
+void Button::SetButtonStatusText(ButtonStatusColor TextColor) // 重新设置按钮的三种的交互状态下的不同文字颜色，也就是按钮标签的颜色
 {
 	this->TextColor = TextColor;
 }
 
-void Button::SetButtonStatusIMagePATH(const std::wstring* ButtonStatusIMagePATH) // 设置按钮在三种不同的交互状态下的图片的路径
+void Button::SetButtonLocation(int x, int y) // 重新设置按钮位置
 {
-	ButtonStatusIMage = new IMAGE[3];
-	for (int i = 0; i < 3; i++)
-	{
-		loadimage(&ButtonStatusIMage[i], ButtonStatusIMagePATH[i].c_str());
-	}
-
-	// 初始化按钮的宽度和高度
-	buttonSizeLocation.width = ButtonStatusIMage[0].getwidth();
-	buttonSizeLocation.height = ButtonStatusIMage[0].getheight();
+	this->buttonSizeLocation.x = x;
+	this->buttonSizeLocation.y = y;
+	CalculationButtonTagCenterCoordinate(); // 重新计算按钮标签居中坐标
 }
 
-void Button::SetButtonStatusIMage(const IMAGE* ButtonStatusIMage) // 设置按钮在三种不同的交互状态下的图片
+void Button::SetButtonSize(int width, int height) // 重新设置按钮的大小
 {
-	this->ButtonStatusIMage = new IMAGE[3];
-	for (int i = 0; i < 3; i++)
-	{
-		this->ButtonStatusIMage[i] = ButtonStatusIMage[i];
-	}
-
-	// 初始化按钮的宽度和高度
-	buttonSizeLocation.width = this->ButtonStatusIMage[0].getwidth();
-	buttonSizeLocation.height = this->ButtonStatusIMage[0].getheight();
+	this->buttonSizeLocation.width = width;
+	this->buttonSizeLocation.height = height;
+	CalculationButtonTagCenterCoordinate(); // 重新计算按钮标签居中坐标
 }
 
-
-void Button::SetButtonSizeLocation(ButtonSizeLocation buttonSizeLocation) // 重新设置按钮的大小，位置和圆角的宽度和高度
+void Button::SetButtonSizeLocation(ButtonSizeLocation buttonSizeLocation) // 重新设置按钮的大小和位置
 {
 	this->buttonSizeLocation = buttonSizeLocation;
+	CalculationButtonTagCenterCoordinate(); // 重新计算按钮标签居中坐标
 }
 
+void Button::SetButtonImage(IMAGE* img) // 设置图片按钮的三种交互状态下的不同的按钮图片
+{
+	ButtonStatusImage = new IMAGE[3]; // 分配空间
 
-void Button::Draw() // 重写了接口类的绘制UI(Draw)的函数，用来绘制按钮
+	for (int i = 0; i < 3; i++) // 逐个将按钮图片拷贝过来
+		ButtonStatusImage[i] = img[i];
+
+	// 重新初始化按钮宽度和高度
+	buttonSizeLocation.width = ButtonStatusImage[0].getwidth();
+	buttonSizeLocation.height = ButtonStatusImage[0].getheight();
+}
+
+void Button::SetButtonImagePath(std::wstring* path) // 设置图片按钮的三种交互状态下的不同按钮图片的路径
+{
+	ButtonStatusImage = new IMAGE[3]; // 分配空间
+
+	for (int i = 0; i < 3; i++) // 逐个将按钮图片加载过来
+		loadimage(&ButtonStatusImage[i], path[i].c_str());
+
+	// 重新初始化按钮宽度和高度
+	buttonSizeLocation.width = ButtonStatusImage[0].getwidth();
+	buttonSizeLocation.height = ButtonStatusImage[0].getheight();
+}
+
+int Button::GetID()
+{
+	return ID;
+}
+
+void Button::Draw()
 {
 	switch (buttonType)
 	{
-		case ButtonType::Have_border_fill: // 带边框的填充按钮
+		case ButtonType::With_borders_Fill_Button:
 			switch (buttonStatus)
 			{
 				case ButtonStatus::Ordinary:
 					setfillcolor(FillColor.Ordinary);
 					setlinecolor(LineColor.Ordinary);
 					settextcolor(TextColor.Ordinary);
-					fillrectangle(buttonSizeLocation.x, buttonSizeLocation.y, buttonSizeLocation.x + buttonSizeLocation.width, buttonSizeLocation.y + buttonSizeLocation.height);
-					outtextxy(TextCenterX, TextCenterY, ButtonText.c_str());
 					break;
 				case ButtonStatus::Suspended:
-					setfillcolor(FillColor.Suspended); 
+					setfillcolor(FillColor.Suspended);
 					setlinecolor(LineColor.Suspended);
 					settextcolor(TextColor.Suspended);
-					fillrectangle(buttonSizeLocation.x, buttonSizeLocation.y, buttonSizeLocation.x + buttonSizeLocation.width, buttonSizeLocation.y + buttonSizeLocation.height);
-					outtextxy(TextCenterX, TextCenterY, ButtonText.c_str());
 					break;
 				case ButtonStatus::Press:
 					setfillcolor(FillColor.Press);
 					setlinecolor(LineColor.Press);
 					settextcolor(TextColor.Press);
-					fillrectangle(buttonSizeLocation.x, buttonSizeLocation.y, buttonSizeLocation.x + buttonSizeLocation.width, buttonSizeLocation.y + buttonSizeLocation.height);
-					outtextxy(TextCenterX, TextCenterY, ButtonText.c_str());
 					break;
 			}
-		break;
-		case ButtonType::Borderless_fill: // 不带边框的填充按钮
+			fillrectangle(buttonSizeLocation.x, buttonSizeLocation.y, buttonSizeLocation.x + buttonSizeLocation.width, buttonSizeLocation.y + buttonSizeLocation.height);
+
+			// 设置按钮标签样式，也就是标签文本的大小和字体
+			settextstyle(buttonTagStyle.height, buttonTagStyle.width, buttonTagStyle.Font.c_str());
+			outtextxy(ButtonTagCenterX, ButtonTagCenterY, ButtonTag.c_str());
+			break;
+		case ButtonType::Without_borders_Fill_Button:
 			switch (buttonStatus)
 			{
 				case ButtonStatus::Ordinary:
 					setfillcolor(FillColor.Ordinary);
 					setlinecolor(FillColor.Ordinary);
 					settextcolor(TextColor.Ordinary);
-					fillrectangle(buttonSizeLocation.x, buttonSizeLocation.y, buttonSizeLocation.x + buttonSizeLocation.width, buttonSizeLocation.y + buttonSizeLocation.height);
-					outtextxy(TextCenterX, TextCenterY, ButtonText.c_str());
 					break;
 				case ButtonStatus::Suspended:
 					setfillcolor(FillColor.Suspended);
 					setlinecolor(FillColor.Suspended);
 					settextcolor(TextColor.Suspended);
-					fillrectangle(buttonSizeLocation.x, buttonSizeLocation.y, buttonSizeLocation.x + buttonSizeLocation.width, buttonSizeLocation.y + buttonSizeLocation.height);
-					outtextxy(TextCenterX, TextCenterY, ButtonText.c_str());
 					break;
 				case ButtonStatus::Press:
 					setfillcolor(FillColor.Press);
 					setlinecolor(FillColor.Press);
 					settextcolor(TextColor.Press);
-					fillrectangle(buttonSizeLocation.x, buttonSizeLocation.y, buttonSizeLocation.x + buttonSizeLocation.width, buttonSizeLocation.y + buttonSizeLocation.height);
-					outtextxy(TextCenterX, TextCenterY, ButtonText.c_str());
 					break;
 			}
-		break;
-		case ButtonType::Have_border_fill_rounded: // 带边框的填充圆角按钮
+			fillrectangle(buttonSizeLocation.x, buttonSizeLocation.y, buttonSizeLocation.x + buttonSizeLocation.width, buttonSizeLocation.y + buttonSizeLocation.height);
+
+			// 设置按钮标签样式，也就是标签文本的大小和字体
+			settextstyle(buttonTagStyle.height, buttonTagStyle.width, buttonTagStyle.Font.c_str());
+			outtextxy(ButtonTagCenterX, ButtonTagCenterY, ButtonTag.c_str());
+			break;
+		case ButtonType::With_borders_Fill_Rounded_Button:
 			switch (buttonStatus)
 			{
 				case ButtonStatus::Ordinary:
 					setfillcolor(FillColor.Ordinary);
 					setlinecolor(LineColor.Ordinary);
 					settextcolor(TextColor.Ordinary);
-					fillroundrect(buttonSizeLocation.x, buttonSizeLocation.y, buttonSizeLocation.x + buttonSizeLocation.width, buttonSizeLocation.y + buttonSizeLocation.height, buttonSizeLocation.ellipsewidth, buttonSizeLocation.ellipseheight);
-					outtextxy(TextCenterX, TextCenterY, ButtonText.c_str());
 					break;
 				case ButtonStatus::Suspended:
 					setfillcolor(FillColor.Suspended);
 					setlinecolor(LineColor.Suspended);
 					settextcolor(TextColor.Suspended);
-					fillroundrect(buttonSizeLocation.x, buttonSizeLocation.y, buttonSizeLocation.x + buttonSizeLocation.width, buttonSizeLocation.y + buttonSizeLocation.height, buttonSizeLocation.ellipsewidth, buttonSizeLocation.ellipseheight);
-					outtextxy(TextCenterX, TextCenterY, ButtonText.c_str());
 					break;
 				case ButtonStatus::Press:
 					setfillcolor(FillColor.Press);
 					setlinecolor(LineColor.Press);
 					settextcolor(TextColor.Press);
-					fillroundrect(buttonSizeLocation.x, buttonSizeLocation.y, buttonSizeLocation.x + buttonSizeLocation.width, buttonSizeLocation.y + buttonSizeLocation.height, buttonSizeLocation.ellipsewidth, buttonSizeLocation.ellipseheight);
-					outtextxy(TextCenterX, TextCenterY, ButtonText.c_str());
 					break;
 			}
-		break;
-		case ButtonType::Borderless_fill_rounded: // 不带边框的填充圆角按钮
+			fillroundrect(buttonSizeLocation.x, buttonSizeLocation.y, buttonSizeLocation.x + buttonSizeLocation.width, buttonSizeLocation.y + buttonSizeLocation.height, buttonSizeLocation.ellipseWidth, buttonSizeLocation.ellipseHeight);
+
+			/*std::cout << "buttonSizeLocation_X: " << buttonSizeLocation.x << std::endl;
+			std::cout << "buttonSizeLocation_Y: " << buttonSizeLocation.y << std::endl;
+			std::cout << "buttonSizeLocation_Witdh: " << buttonSizeLocation.width << std::endl;
+			std::cout << "buttonSizeLocation_Height: " << buttonSizeLocation.height << std::endl;
+			std::cout << "buttonSizeLocation_ellipseWidth: " << buttonSizeLocation.ellipseWidth << std::endl;
+			std::cout << "buttonSizeLocation_ellipseHeight: " << buttonSizeLocation.ellipseHeight << std::endl;*/
+
+			// 设置按钮标签样式，也就是标签文本的大小和字体
+			settextstyle(buttonTagStyle.height, buttonTagStyle.width, buttonTagStyle.Font.c_str());
+			outtextxy(ButtonTagCenterX, ButtonTagCenterY, ButtonTag.c_str());
+			break;
+		case ButtonType::Without_borders_Fill_Rounded_Button:
 			switch (buttonStatus)
 			{
 				case ButtonStatus::Ordinary:
 					setfillcolor(FillColor.Ordinary);
+					setlinecolor(FillColor.Ordinary);
 					settextcolor(TextColor.Ordinary);
-					solidroundrect(buttonSizeLocation.x, buttonSizeLocation.y, buttonSizeLocation.x + buttonSizeLocation.width, buttonSizeLocation.y + buttonSizeLocation.height, buttonSizeLocation.ellipsewidth, buttonSizeLocation.ellipseheight);
-					outtextxy(TextCenterX, TextCenterY, ButtonText.c_str());
 					break;
 				case ButtonStatus::Suspended:
 					setfillcolor(FillColor.Suspended);
+					setlinecolor(FillColor.Suspended);
 					settextcolor(TextColor.Suspended);
-					solidroundrect(buttonSizeLocation.x, buttonSizeLocation.y, buttonSizeLocation.x + buttonSizeLocation.width, buttonSizeLocation.y + buttonSizeLocation.height, buttonSizeLocation.ellipsewidth, buttonSizeLocation.ellipseheight);
-					outtextxy(TextCenterX, TextCenterY, ButtonText.c_str());
 					break;
 				case ButtonStatus::Press:
 					setfillcolor(FillColor.Press);
+					setlinecolor(FillColor.Press);
 					settextcolor(TextColor.Press);
-					solidroundrect(buttonSizeLocation.x, buttonSizeLocation.y, buttonSizeLocation.x + buttonSizeLocation.width, buttonSizeLocation.y + buttonSizeLocation.height, buttonSizeLocation.ellipsewidth, buttonSizeLocation.ellipseheight);
-					outtextxy(TextCenterX, TextCenterY, ButtonText.c_str());
 					break;
 			}
-		break;
-		case ButtonType::Picture: // 图片按钮
+			fillroundrect(buttonSizeLocation.x, buttonSizeLocation.y, buttonSizeLocation.x + buttonSizeLocation.width, buttonSizeLocation.y + buttonSizeLocation.height, buttonSizeLocation.ellipseWidth, buttonSizeLocation.ellipseHeight);
+
+			// 设置按钮标签样式，也就是标签文本的大小和字体
+			settextstyle(buttonTagStyle.height, buttonTagStyle.width, buttonTagStyle.Font.c_str());
+			outtextxy(ButtonTagCenterX, ButtonTagCenterY, ButtonTag.c_str());
+			break;
+		case ButtonType::Picture_Button:
 			switch (buttonStatus)
 			{
 				case ButtonStatus::Ordinary:
-					tool.Transparent_texture(buttonSizeLocation.x, buttonSizeLocation.y, &ButtonStatusIMage[0]);
+					tool.Transparent_texture(buttonSizeLocation.x, buttonSizeLocation.y, &ButtonStatusImage[0]);
 					break;
 				case ButtonStatus::Suspended:
-					tool.Transparent_texture(buttonSizeLocation.x, buttonSizeLocation.y, &ButtonStatusIMage[1]);
+					tool.Transparent_texture(buttonSizeLocation.x, buttonSizeLocation.y, &ButtonStatusImage[1]);
 					break;
 				case ButtonStatus::Press:
-					tool.Transparent_texture(buttonSizeLocation.x, buttonSizeLocation.y, &ButtonStatusIMage[2]);
+					tool.Transparent_texture(buttonSizeLocation.x, buttonSizeLocation.y, &ButtonStatusImage[2]);
 					break;
 			}
-		break;
+			break;
 	}
 }
 
-UISignal Button::Updata(ExMessage msg) // 重写了接口类的更新UI(Updata)函数，用来更新按钮的状态
+ControlSignal Button::Updata(const ExMessage& msg)
 {
-	if (JudgmentMouseInside(msg.x, msg.y) && msg.message == WM_LBUTTONDOWN)
+	if (JudgmentMouseButtonInside(msg.x, msg.y) && msg.message == WM_LBUTTONDOWN)
 	{
 		buttonStatus = ButtonStatus::Press;
-		return UISignal::Click;
+		return ControlSignal::Click;
 	}
-	else if (JudgmentMouseInside(msg.x, msg.y))
+	else if (JudgmentMouseButtonInside(msg.x, msg.y))
 	{
 		buttonStatus = ButtonStatus::Suspended;
 	}
@@ -274,7 +300,7 @@ UISignal Button::Updata(ExMessage msg) // 重写了接口类的更新UI(Updata)函数，用来
 	}
 }
 
-bool Button::JudgmentMouseInside(int MouseX, int MouseY) // 判断鼠标是否在按钮里面
+bool Button::JudgmentMouseButtonInside(int MouseX, int MouseY)
 {
 	if (MouseX > buttonSizeLocation.x && MouseX < buttonSizeLocation.x + buttonSizeLocation.width && MouseY > buttonSizeLocation.y && MouseY < buttonSizeLocation.y + buttonSizeLocation.height)
 		return 1;
@@ -282,20 +308,20 @@ bool Button::JudgmentMouseInside(int MouseX, int MouseY) // 判断鼠标是否在按钮里
 		return 0;
 }
 
-void Button::CalculationTextCenterLocation()
+void Button::CalculationButtonTagCenterCoordinate()
 {
-	// 获取按钮标签文字的宽度和高度
-	int TextWidth = textwidth(ButtonText.c_str());
-	int TextHeight = textheight(ButtonText.c_str());
-	// std::cout << "TextWidth: " << TextWidth << "\t" << "TextHeight: " << TextHeight << std::endl;
+	// 设置按钮标签样式，也就是标签文本的大小和字体
+	settextstyle(buttonTagStyle.height, buttonTagStyle.width, buttonTagStyle.Font.c_str());
 
-	// 获取按钮的宽度和高度
+	// 获取按钮宽度和高度
 	int ButtonWidth = buttonSizeLocation.width;
 	int ButtonHeight = buttonSizeLocation.height;
-	// std::cout << "ButtonWidth: " << ButtonWidth << "\t" << "ButtonHeight: " << ButtonHeight << std::endl;
 
-	// 计算按钮标签文字的居中坐标
-	TextCenterX = (ButtonWidth - TextWidth) / 2 + buttonSizeLocation.x;
-	TextCenterY = (ButtonHeight - TextHeight) / 2 + buttonSizeLocation.y;
-	// std::cout << "TextCenterX: " << TextCenterX << "\t" << "TextCenterY: " << TextCenterY << std::endl;
+	// 获取按钮标签宽度和高度
+	int ButtonTagWidth = textwidth(ButtonTag.c_str());
+	int ButtonTagHeight = textheight(ButtonTag.c_str());
+
+	// 计算按钮标签的居中坐标
+	ButtonTagCenterX = (ButtonWidth - ButtonTagWidth) / 2 + buttonSizeLocation.x;
+	ButtonTagCenterY = (ButtonHeight - ButtonTagHeight) / 2 + buttonSizeLocation.y;
 }

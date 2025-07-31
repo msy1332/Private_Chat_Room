@@ -1,0 +1,19 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build with MSBuild", // 📌 任务名称，Ctrl+Shift+B 时会看到
+      "type": "shell",               // 📌 使用 shell 命令执行
+      "command": "msbuild", // 📌 编译器路径（这里是 MSBuild）,如果把msbuild添加到了环境变量里面的话就可以直接写成msbuild,如果没有的话，那还是写成这样，D:\\Visual.Studio\\Microsoft.VisualStudio\\MSBuild\\Current\\Bin\\MSBuild.exe
+      "args": [                      // 📌 编译参数
+        "Private_Chat_Room.sln",          // 👈 要编译的解决方案文件
+        "/p:Configuration=Debug"    // 👈 编译配置（Debug/Release）
+      ],
+      "group": {
+        "kind": "build",            // 📌 此任务属于“构建”任务
+        "isDefault": true           // 📌 是默认构建任务（Ctrl+Shift+B 自动执行）
+      },
+      "problemMatcher": ["$msCompile"] // 📌 自动解析 MSBuild 的错误信息并高亮
+    }
+  ]
+}
